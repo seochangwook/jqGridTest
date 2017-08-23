@@ -27,6 +27,8 @@
 	<div>
 		<table id="grid"></table>
 	</div>
+	<div id="pager" class="pagenate">
+	</div>
 	<br>
 	<div>
 		<label>* Click Multi Select Info</label><br>
@@ -35,8 +37,9 @@
 	<br>
 	<div>
 		<label>* Search Info</label><br>
-		<input type="text" placeholder="input search Inv no" id="searchtext">&nbsp
-		<input type="button" value="search(table reload)" id="searchbutton">
+		<input type="text" placeholder="input search name" id="searchtext">&nbsp
+		<input type="button" value="search(table reload)" id="searchbutton">&nbsp
+		<input type="button" value="refresh" id="refreshbutton">
 	</div>
 </body>
 <script type="text/javascript">
@@ -44,7 +47,7 @@
 console.log('script load success...');
 
 $(function(){
-	//Grid에서 멀티체크 확인//
+	//Grid에서 멀티체크 확인(PK의 구분을 가진 데이터를 활용)//
 	$('#multicellinfobutton').click(function(){
 		var selectnumber = $("#grid").jqGrid('getGridParam','selarrrow');
 		
@@ -68,7 +71,7 @@ $(function(){
 			search:true,
 			datatype:"json",
 			postData:{
-				id : $('#searchtext').val()
+				name : $('#searchtext').val()
 			},
 			page : 1
 		}).trigger('reloadGrid');
@@ -79,21 +82,26 @@ $(function(){
 $(function(){
 	//jqGrid Setting//
 	$('#grid').jqGrid({
-		 datatype : "local",
-		 height : 'auto',
-		 autowidth : true,
-		 colModel:[
-         	{label:'Inv No',name:'id',index:'id', width:60, sorttype:"int", sortable:false},
-            {label:'Date',name:'invdate',index:'invdate', width:90, sorttype:"date"},
-            {label:'Client',name:'name',index:'name', width:100},
-            {label:'Amount',name:'amount',index:'amount', width:80, align:"right",sorttype:"float"},
-            {label:'Tax', name:'tax',index:'tax', width:80, align:"right",sorttype:"float"},
-            {label:'Total', name:'total',index:'total', width:80,align:"right",sorttype:"float"},
-            {label:'Notes',name:'note',index:'note', width:150, sortable:false},
+		datatype:"local",
+		height:'auto',
+		width:'auto',
+		autowidth:true,
+		rowNum:2,
+		sortname:'id',
+		sortorder:'desc',
+		pager:'#pager',
+		colModel:[
+         	{label:'No',name:'id',index:'id', width:50, sorttype:"int", sortable:false},
+         	{label:'Password',name:'password',index:'password', width:50, hidden:true, sorttype:"int", sortable:false},
+            {label:'Name',name:'name',index:'name', width:50, formatter:detailinfo},
+            {label:'EmpNum',name:'empnum',index:'empnum', width:50, align:"right",sorttype:"float"},
             {label:'정보보기', name:'info', index:'info', width:50, sortable:false, formatter:infoclick}
-         ],
-         multiselect: true,
-		 caption: "그리드 배열 데이터 샘플링"
+        ],
+        multiselect:true,
+		caption:"그리드 배열 데이터 샘플링",
+		loadComplete:function(data){
+			
+		}
 	});
 	
 	datainit(); //로컬데이터 초기화//
@@ -101,44 +109,48 @@ $(function(){
 ///////////////////////////
 function datainit(){
 	console.log('data load success...');
+	var data = [];
 	// 로컬 데이터
-    myData = [
-        {id:"1",invdate:"2007-10-01",name:"test1",note:"note",amount:"200.00",tax:"10.00",total:"210.00"},
-        {id:"2",invdate:"2007-10-02",name:"test2",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"},
-        {id:"3",invdate:"2007-09-01",name:"test3",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"},
-        {id:"4",invdate:"2007-10-04",name:"test4",note:"note",amount:"200.00",tax:"10.00",total:"210.00"},
-        {id:"5",invdate:"2007-10-05",name:"test5",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"},
-        {id:"6",invdate:"2007-09-06",name:"test6",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"},
-        {id:"7",invdate:"2007-10-04",name:"test7",note:"note",amount:"200.00",tax:"10.00",total:"210.00"},
-        {id:"8",invdate:"2007-10-03",name:"test8",note:"note2",amount:"300.00",tax:"20.00",total:"320.00"},
-        {id:"9",invdate:"2007-09-01",name:"test9",note:"note3",amount:"400.00",tax:"30.00",total:"430.00"}
+    data = [
+        {id:"1",name:"서창욱",empnum:"21084", password:'1234'},
+       	{id:"2",name:"홍길동",empnum:"21085", password:'5678'},
+       	{id:"3",name:"임꺽정",empnum:"21086", password:'1425'},
+       	{id:"4",name:"김철수",empnum:"21087", password:'1111'},
+       	{id:"5",name:"김영희",empnum:"21088", password:'2222'},
     ];
+	
+	var datasize = data.length;
 
-    for( i=0, max = myData.length ; i<=max ; i++ ){
-    	$('#grid').jqGrid('addRowData', i+1, myData[i]); //컬럼에 데이터 추가//
+    for( i=0; i<datasize; i++){
+    	$('#grid').jqGrid('addRowData', i+1, data[i]); //컬럼에 데이터 추가//
     }
+    
+    console.log('data load ')
 }
 //////////////////////////
 function infoclick(cellvalue, options, rowdata, action){
 	//버튼을 출력//
-	return "<input type=\"button\" value=\"click\" onclick=\"info('"+rowdata.invdate+"','"+rowdata.name+"')\"/>";
+	return "<input type=\"button\" value=\"click\" onclick=\"info('"+rowdata.name+"','"+rowdata.empnum+"','"+rowdata.password+"')\"/>";
 }
 //////////////////////////
-function info(invdate, name){
+function info(name, empnum, password){
 	console.log('------------------------');
 	console.log('cell info print');
-	console.log('invdate: ' + invdate);
 	console.log('name: ' + name);
+	console.log('empnum: ' + empnum);
+	console.log('password: ' + password);
 	console.log('------------------------');
 	
 	//ajax//
-	var v_invdate = invdate;
 	var v_name = name;
+	var v_empnum = empnum;
+	var v_password = password;
 	
 	var trans_objeect = 
 	{
-    	'invdate':v_invdate,
-    	'name':v_name
+    	'name':v_name,
+    	'empnum':v_empnum,
+    	'password':v_password
     }
 	var trans_json = JSON.stringify(trans_objeect); //json으로 반환//
 	
@@ -166,6 +178,27 @@ function info(invdate, name){
 		},
 		error: function(retVal, status, er){
 			alert("error: "+retVal+" status: "+status+" er:"+er);
+		}
+	});
+}
+//////////////////////////
+function detailinfo(cellvalue, options, rowdata, action){
+	//링크로 출력(javascript로 해야지 일반 페이지 이동이 되지 않고 자바스크립트 함수를 호출 가능)//
+	return "<a href=\"javascript:detaildialog('"+rowdata.name+"')\">"+cellvalue+"</a>";
+}
+//////////////////////////
+function detaildialog(name){
+	var infodialog = new $.Zebra_Dialog('<strong>Message:</strong><br><br><p>detail info: '+name+'</p>',{
+		title: 'jqGrid Test',
+		type: 'confirmation',
+		print: false,
+		width: 760,
+		position: ['right - 20', 'top + 20'],
+		buttons: ['닫기'],
+		onClose: function(caption){
+			if(caption == '닫기'){
+				//alert('yes click');
+			}
 		}
 	});
 }
