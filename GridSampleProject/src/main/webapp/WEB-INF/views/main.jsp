@@ -13,10 +13,11 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/latest/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
 	<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-	<!-- jqGrid CDN -->
+	<!-- jqGrid CDN & paging -->
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/css/ui.jqgrid.css" />
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/js/jquery.jqGrid.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jqgrid/4.6.0/js/i18n/grid.locale-en.js"></script>
+	<script src="/js/util/paginate.js"></script>
 	<!-- Zebra Dialog -->
 	<script src="/js/dialog/zebra_dialog.src.js"></script>
 	<link rel="stylesheet" href="/css/dialog/zebra_dialog.css" type="text/css"/>
@@ -27,7 +28,8 @@
 	<div>
 		<table id="grid"></table>
 	</div>
-	<div id="pager" class="pagenate">
+	<br>
+	<div id="paginate" align="center">
 	</div>
 	<br>
 	<div>
@@ -80,37 +82,44 @@ $(function(){
 </script>
 <script type="text/javascript">
 $(function(){
+	datainit(); //Grid 초기화//
+});
+///////////////////////////
+function datainit(){
 	//jqGrid Setting//
 	$('#grid').jqGrid({
-		datatype:"local",
+		url:'<c:url value="/datalist.do"/>',
+		mtype:'POST',
+		datatype:"json",
 		height:'auto',
 		width:'auto',
 		autowidth:true,
-		rowNum:2,
-		sortname:'id',
-		sortorder:'desc',
+		rowNum:1,
 		pager:'#pager',
 		colModel:[
-         	{label:'No',name:'id',index:'id', width:50, sorttype:"int", sortable:false},
+         	{label:'No',name:'id',index:'id', width:50, sorttype:"int"},
          	{label:'Password',name:'password',index:'password', width:50, hidden:true, sorttype:"int", sortable:false},
             {label:'Name',name:'name',index:'name', width:50, formatter:detailinfo},
             {label:'EmpNum',name:'empnum',index:'empnum', width:50, align:"right",sorttype:"float"},
             {label:'정보보기', name:'info', index:'info', width:50, sortable:false, formatter:infoclick}
         ],
         multiselect:true,
-		caption:"그리드 배열 데이터 샘플링",
+		caption:"<p class='total'>총 <strong id='totalCnt'>0</strong>건의 검색결과가 있습니다.</p>",
 		loadComplete:function(data){
+			$('#totalCnt').text(data.records);
+			//페이징 처리//
+			var allRowsInGrid = $('#grid').jqGrid('getGridParam', 'records');
+			console.log('table count: ' + allRowsInGrid);
+			console.log('page: ' + data.page);
 			
+			//초기 페이지 설정//
+			initPage("paginate", "grid", allRowsInGrid, "");
 		}
 	});
 	
-	datainit(); //로컬데이터 초기화//
-});
-///////////////////////////
-function datainit(){
-	console.log('data load success...');
-	var data = [];
 	// 로컬 데이터
+	/*var data = [];
+
     data = [
         {id:"1",name:"서창욱",empnum:"21084", password:'1234'},
        	{id:"2",name:"홍길동",empnum:"21085", password:'5678'},
@@ -123,9 +132,9 @@ function datainit(){
 
     for( i=0; i<datasize; i++){
     	$('#grid').jqGrid('addRowData', i+1, data[i]); //컬럼에 데이터 추가//
-    }
+    }*/
     
-    console.log('data load ')
+    console.log('data load success...');
 }
 //////////////////////////
 function infoclick(cellvalue, options, rowdata, action){
@@ -155,7 +164,7 @@ function info(name, empnum, password){
 	var trans_json = JSON.stringify(trans_objeect); //json으로 반환//
 	
 	$.ajax({
-		url: "http://localhost:8080/ajaxtest",
+		url: '<c:url value="/datainfo.do"/>',
 		type: 'POST',
 		dataType: 'json',
 		data: trans_json,
@@ -201,6 +210,66 @@ function detaildialog(name){
 			}
 		}
 	});
+}
+///////////////////////////
+//첫 페이지로 이동//
+function firstPage(){
+	$('#grid').jqGrid('setGridParam', {
+		page:1
+	}).trigger("reloadGrid");
+}
+/////////////////////////////////
+//이전페이지로 이동//
+function prePage(totalSize){
+	var currentPage = $('#grid').getGridParam('page');
+	var pageCount = 10;
+	
+	currentPage -= pageCount;
+	pageList = Math.ceil(currentPage/pageCount);
+	
+	currentPage = (PageList-1)*pageCount + pageCount;
+	
+	initPage("paginate", "grid", totalSize, currentPage);
+	
+	$('#grid').jqGrid('setGridParam', {
+		page:currentPage
+	}).trigger('reloadGrid');
+}
+//////////////////////////////////
+//다음 페이지 이동//
+function nextPage(totalSize){
+	var currentPage = $('#grid').getGridParam('page');
+	var pageCount = 10;
+	
+	currentPage += pageCount;
+	pageList = Math.ceil(currentPage/pageCount);
+	
+	currentPage = (pageList-1)*pageCount + 1;
+	
+	console.log('next move page: ' + currentPage);
+	
+	initPage("paginate", "grid", totalSize, currentPage);
+	
+	$('#grid').jqGrid('setGridParam', {
+		page:currentPage
+	}).trigger('reloadGrid');
+}
+//////////////////////////////////////////
+//마지막 페이지 이동//
+function lastPage(totalSize){
+	$('#grid').jqGrid('setGridParam', {
+		page:totalSize
+	}).trigger('reloadGrid');
+}
+//////////////////////////////////////////
+//페이지 이동//
+function goPage(num){
+	console.log('gopage: ' + num);
+	
+	$('#grid').jqGrid('setGridParam', {
+		search:true,
+		page:num
+	}).trigger('reloadGrid');
 }
 </script>
 </html>

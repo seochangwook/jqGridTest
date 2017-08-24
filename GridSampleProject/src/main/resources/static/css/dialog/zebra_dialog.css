@@ -37,11 +37,11 @@
 
 .ZebraDialog .ZebraDialog_Icon              { padding: 10px 10px 10px 68px; min-height: 48px; _height: 48px }
 
-.ZebraDialog .ZebraDialog_Confirmation      { background-image: url('../../images/confirmation.png') }
-.ZebraDialog .ZebraDialog_Error             { background-image: url('../../images/error.png') }
-.ZebraDialog .ZebraDialog_Information       { background-image: url('../../images/information.png') }
-.ZebraDialog .ZebraDialog_Question          { background-image: url('../../images/question.png') }
-.ZebraDialog .ZebraDialog_Warning           { background-image: url('../../images/warning.png') }
+.ZebraDialog .ZebraDialog_Confirmation      { background-image: url('../../images/dialog/confirmation.png') }
+.ZebraDialog .ZebraDialog_Error             { background-image: url('../../images/dialog/error.png') }
+.ZebraDialog .ZebraDialog_Information       { background-image: url('../../images/dialog/information.png') }
+.ZebraDialog .ZebraDialog_Question          { background-image: url('../../images/dialog/question.png') }
+.ZebraDialog .ZebraDialog_Warning           { background-image: url('../../images/dialog/warning.png') }
 
 .ZebraDialog .ZebraDialog_Buttons {
     background: #E5E5E5;
