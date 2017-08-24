@@ -13,7 +13,7 @@
 <li>url : 데이터를 획득을 위한 url</li>
 <li>rowNum : 초기화면에 출력할 데이터 row개수</li>
 <li>mtype : HTTP Request Method지정</li>
-<h2>$ jqGrid - col Model Option</h2>
+<h2>$ jqGrid - colModel Option</h2>
 <li>name : 해당 column에 출력해야할 데이터 이름. 서버로 부터 넘어오는 데이터 이름, 데이터를 자동매핑</li>
 <li>index : 정렬 시 사용할 이름을 지정. 미지정 시 정렬 시 name 속성을 사용</li>
 <li>key : 유일한 row id값을 위해 id값으로 지정. 유일한 값</li>
