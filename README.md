@@ -2,7 +2,7 @@
 
 <div>
 <label>* http://www.trirand.com/blog/</label><br>
-<label>* http://www.trirand.com/blog/jqgrid/jqgrid.html</label>
+<label>* http://www.trirand.com/blog/jqgrid/jqgrid.html</label><br>
 <label>* http://blog.naver.com/PostView.nhn?blogId=jaeik714&logNo=140187085974</label>
 <h2>$ jqGrid - Grid Option</h2>
 <li>datatype : 그리드에 표시할 데이터 타입 xml, json, local등을 사용</li>
