@@ -3,7 +3,7 @@
 <div>
 <label>* http://www.trirand.com/blog/</label><br>
 <label>* http://www.trirand.com/blog/jqgrid/jqgrid.html</label><br>
-<label>* http://blog.naver.com/PostView.nhn?blogId=jaeik714&logNo=140187085974</label>
+<label>* http://www.trirand.com/jqgridwiki/doku.php?id=wiki:options</label>
 <h2>$ jqGrid - Grid Option</h2>
 <li>datatype : 그리드에 표시할 데이터 타입 xml, json, local등을 사용</li>
 <li>height : Body부분의 사이즈를 지정. 'auto'로 지정 시 데이터 갯수에 따라 자동으로 높이를 계산</li>
