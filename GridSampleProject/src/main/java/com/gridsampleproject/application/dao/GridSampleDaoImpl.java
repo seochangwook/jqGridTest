@@ -14,17 +14,37 @@ public class GridSampleDaoImpl implements GridSampleDao{
 	public List<Map<String, Object>> getSampleDataList(Map<String, Object> paramInfo) {
 		//데이터 셋팅//
 		System.out.println("page: " + paramInfo.get("page"));
+		System.out.println("search name: " + paramInfo.get("name"));
 		
 		List<Map<String, Object>> datalist = new ArrayList<Map<String, Object>>();
 		
 		Map<String, Object> datasize = new HashMap<String, Object>();
+		
+		if(paramInfo.get("name") != null){
+			//조건값이 있는 경우//
+			// Data Set - No DB//
+			datasize.put("totcnt", "1");
 
-		// Data Set - No DB//
-		datasize.put("totcnt", "7");
+			datalist.add(datasize);
+			
+			Map<String, Object> searchdata = new HashMap<String, Object>();
 
-		datalist.add(datasize);
+			searchdata.put("id", "6");
+			searchdata.put("password", "3333");
+			searchdata.put("name", "가나다");
+			searchdata.put("empnum", "21099");
 
-		//if(paramInfo.get("page").equals("1")){
+			datalist.add(searchdata);
+			
+			return datalist;
+		} else if(paramInfo.get("name") == null){
+			//조건값이 없으면 전체 검색//
+			// Data Set - No DB//
+			datasize.put("totcnt", "7");
+
+			datalist.add(datasize);
+			
+			//if(paramInfo.get("page").equals("1")){
 			Map<String, Object> data1 = new HashMap<String, Object>();
 
 			data1.put("id", "1");
@@ -94,6 +114,7 @@ public class GridSampleDaoImpl implements GridSampleDao{
 
 			datalist.add(data7);
 		//}
+		}
 		
 		return datalist;
 	}

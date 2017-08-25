@@ -25,6 +25,14 @@
 <body>
 	<h1># jqGrid Test Page</h1>
 	<br>
+	<button id="refresh"><img src='/images/refreshbutton.PNG' width='50' height='50'></button>&nbsp
+	<select name="rownumselect" onchange="setValues(this.value);">
+    	<option value="2">rowNum</option>
+    	<option value="1">1</option>
+    	<option value="5">5</option>
+    	<option value="10">10</option>
+	</select>
+	<br>
 	<div>
 		<table id="grid"></table>
 	</div>
@@ -69,11 +77,18 @@ $(function(){
 		$('#grid').jqGrid('setGridParam', {
 			search:true,
 			datatype:"json",
+			loadonce:true,
 			postData:{
-				name : $('#searchtext').val()
+				name : $('#searchtext').val() //조건값 설정//
 			},
 			page : 1
 		}).trigger('reloadGrid');
+	});
+	//Grid 새로고침//
+	$('#refresh').click(function(){
+		$("#grid").jqGrid('GridUnload'); //그리드를 전체 지운다.//
+		
+		datainit(); //재로드//
 	});
 });
 </script>
@@ -212,7 +227,18 @@ function Search(searchPage){
 	
 	$('#grid').jqGrid('setGridParam',{
 		search:true,
-		page:searchPage
+		page:searchPage,
+	}).trigger('reloadGrid');
+}
+///////////////////////////
+//select 박스 선택 이벤트//
+function setValues(rowNum){
+	console.log('select rowNum : ' + rowNum);
+	
+	//변경된 rowNum에 따라 호출//
+	$('#grid').jqGrid('setGridParam', {
+		page : 1,
+		rowNum:rowNum,
 	}).trigger('reloadGrid');
 }
 </script>
