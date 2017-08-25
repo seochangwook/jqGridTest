@@ -22,6 +22,7 @@ public class AjaxController {
 	@Autowired
 	GridUtil gridutil;
 	
+	//일반적인 ajax는 @RequestBody 형식으로 받는다.//
 	@RequestMapping(value = "/datainfo.do", method = RequestMethod.POST, produces = {"application/json"})
 	public @ResponseBody Map<String, Object> info(@RequestBody Map<String, Object> info) {	
 		System.out.println("name: " + info.get("name") + " / empnum: " + info.get("empnum") + " / password: " + info.get("password"));
@@ -33,7 +34,7 @@ public class AjaxController {
 		return retVal;
 	}
 	
-	//Data 설정//
+	//Data 설정(jqGrid에서 url데이터는 @RequestParam 형식으로 받는다.)//
 	@RequestMapping(value = "/datalist.do", method = RequestMethod.POST, produces = {"application/json"})
 	public @ResponseBody Map<String, Object> datainit(@RequestParam Map<String, Object> paramInfo) {
 		//기본적으로 jqGrid는 url 즉 ajax통신을 할 시 "key:page"값을 넘겨준다.(@RequestParam로 설정)//

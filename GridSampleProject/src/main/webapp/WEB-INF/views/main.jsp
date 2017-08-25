@@ -29,7 +29,7 @@
 		<table id="grid"></table>
 	</div>
 	<br>
-	<div id="paginate" align="center">
+	<div id="paginate" class="pagenate" align="center">
 	</div>
 	<br>
 	<div>
@@ -45,9 +45,6 @@
 	</div>
 </body>
 <script type="text/javascript">
-//데이터 초기화 및 스크립트 초기화//
-console.log('script load success...');
-
 $(function(){
 	//Grid에서 멀티체크 확인(PK의 구분을 가진 데이터를 활용)//
 	$('#multicellinfobutton').click(function(){
@@ -94,26 +91,23 @@ function datainit(){
 		height:'auto',
 		width:'auto',
 		autowidth:true,
-		rowNum:1,
+		rowNum:2,
 		pager:'#pager',
+		loadonce:true,
 		colModel:[
-         	{label:'No',name:'id',index:'id', width:50, sorttype:"int"},
-         	{label:'Password',name:'password',index:'password', width:50, hidden:true, sorttype:"int", sortable:false},
+         	{label:'No',name:'id',index:'id', width:50, sortable:true},
+         	{label:'Password',name:'password',index:'password', width:50, hidden:true},
             {label:'Name',name:'name',index:'name', width:50, formatter:detailinfo},
-            {label:'EmpNum',name:'empnum',index:'empnum', width:50, align:"right",sorttype:"float"},
-            {label:'정보보기', name:'info', index:'info', width:50, sortable:false, formatter:infoclick}
+            {label:'EmpNum',name:'empnum',index:'empnum', width:50, align:"right"},
+            {label:'정보보기', name:'info', index:'info', width:50, formatter:infoclick}
         ],
         multiselect:true,
-		caption:"<p class='total'>총 <strong id='totalCnt'>0</strong>건의 검색결과가 있습니다.</p>",
+		caption:"<label>* 총 <strong id='totalCnt'>0</strong>건의 검색결과가 있습니다.</label>",
 		loadComplete:function(data){
+			//그리드 로드가 종료된 후 실행//
 			$('#totalCnt').text(data.records);
-			//페이징 처리//
-			var allRowsInGrid = $('#grid').jqGrid('getGridParam', 'records');
-			console.log('table count: ' + allRowsInGrid);
-			console.log('page: ' + data.page);
-			
-			//초기 페이지 설정//
-			initPage("paginate", "grid", allRowsInGrid, "");
+			//페이징 작업(loadonce가 true가 되야지 페이징 가능 = sort도 동일)//
+			initPage("paginate", data.records, $('#grid').jqGrid("getGridParam", "rowNum"), data.page);
 		}
 	});
 	
@@ -138,7 +132,7 @@ function datainit(){
 }
 //////////////////////////
 function infoclick(cellvalue, options, rowdata, action){
-	//버튼을 출력//
+	//테이블 내 버튼을 출력//
 	return "<input type=\"button\" value=\"click\" onclick=\"info('"+rowdata.name+"','"+rowdata.empnum+"','"+rowdata.password+"')\"/>";
 }
 //////////////////////////
@@ -192,7 +186,7 @@ function info(name, empnum, password){
 }
 //////////////////////////
 function detailinfo(cellvalue, options, rowdata, action){
-	//링크로 출력(javascript로 해야지 일반 페이지 이동이 되지 않고 자바스크립트 함수를 호출 가능)//
+	//테이블 내 링크로 출력('javascript:'로 해야지 일반 페이지 이동이 되지 않고 자바스크립트 함수를 호출 가능)//
 	return "<a href=\"javascript:detaildialog('"+rowdata.name+"')\">"+cellvalue+"</a>";
 }
 //////////////////////////
@@ -212,63 +206,13 @@ function detaildialog(name){
 	});
 }
 ///////////////////////////
-//첫 페이지로 이동//
-function firstPage(){
-	$('#grid').jqGrid('setGridParam', {
-		page:1
-	}).trigger("reloadGrid");
-}
-/////////////////////////////////
-//이전페이지로 이동//
-function prePage(totalSize){
-	var currentPage = $('#grid').getGridParam('page');
-	var pageCount = 10;
+//페이지 이동(Search)//
+function Search(searchPage){
+	console.log('page['+searchPage+'] search...');
 	
-	currentPage -= pageCount;
-	pageList = Math.ceil(currentPage/pageCount);
-	
-	currentPage = (PageList-1)*pageCount + pageCount;
-	
-	initPage("paginate", "grid", totalSize, currentPage);
-	
-	$('#grid').jqGrid('setGridParam', {
-		page:currentPage
-	}).trigger('reloadGrid');
-}
-//////////////////////////////////
-//다음 페이지 이동//
-function nextPage(totalSize){
-	var currentPage = $('#grid').getGridParam('page');
-	var pageCount = 10;
-	
-	currentPage += pageCount;
-	pageList = Math.ceil(currentPage/pageCount);
-	
-	currentPage = (pageList-1)*pageCount + 1;
-	
-	console.log('next move page: ' + currentPage);
-	
-	initPage("paginate", "grid", totalSize, currentPage);
-	
-	$('#grid').jqGrid('setGridParam', {
-		page:currentPage
-	}).trigger('reloadGrid');
-}
-//////////////////////////////////////////
-//마지막 페이지 이동//
-function lastPage(totalSize){
-	$('#grid').jqGrid('setGridParam', {
-		page:totalSize
-	}).trigger('reloadGrid');
-}
-//////////////////////////////////////////
-//페이지 이동//
-function goPage(num){
-	console.log('gopage: ' + num);
-	
-	$('#grid').jqGrid('setGridParam', {
+	$('#grid').jqGrid('setGridParam',{
 		search:true,
-		page:num
+		page:searchPage
 	}).trigger('reloadGrid');
 }
 </script>
