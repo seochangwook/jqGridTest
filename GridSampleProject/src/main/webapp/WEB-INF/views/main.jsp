@@ -51,6 +51,14 @@
 		<input type="button" value="search(table reload)" id="searchbutton">&nbsp
 		<input type="button" value="refresh" id="refreshbutton">
 	</div>
+	<br>
+	<div>
+		<label>* Mail info</label><br>
+		<input type="text" placeholder="input send mailaddress" id="sendtoaddress">&nbsp
+		<input type="text" placeholder="input email subject" id="emailsubject">&nbsp
+		<input type="text" placeholder="input email content" id="emailcontent">
+		<input type="button" value="메일전송" id="sendmailbtn">
+	</div>
 </body>
 <script type="text/javascript">
 $(function(){
@@ -89,6 +97,47 @@ $(function(){
 		$("#grid").jqGrid('GridUnload'); //그리드를 전체 지운다.//
 		
 		datainit(); //재로드//
+	});
+	$('#sendmailbtn').click(function(){
+		//ajax//
+		var sendto = $('#sendtoaddress').val();
+		var subject = $('#emailsubject').val();
+		var content = $('#emailcontent').val();
+		
+		var trans_objeect = 
+		{
+	    	'sendto':sendto,
+	    	'subject':subject,
+	    	'content':content
+	    }
+		var trans_json = JSON.stringify(trans_objeect); //json으로 반환//
+		
+		$.ajax({
+			url: '<c:url value="/sendmail.do"/>',
+			type: 'POST',
+			dataType: 'json',
+			data: trans_json,
+			contentType: 'application/json',
+			mimeType: 'application/json',
+			success: function(retVal){
+				var infodialog = new $.Zebra_Dialog('<strong>Message:</strong><br><br><p>ajax call '+retVal.result+'</p>',{
+					title: 'jqGrid Test',
+					type: 'confirmation',
+					print: false,
+					width: 760,
+					position: ['right - 20', 'top + 20'],
+					buttons: ['닫기'],
+					onClose: function(caption){
+						if(caption == '닫기'){
+							//alert('yes click');
+						}
+					}
+				});
+			},
+			error: function(retVal, status, er){
+				alert("error: "+retVal+" status: "+status+" er:"+er);
+			}
+		});
 	});
 });
 </script>

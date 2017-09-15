@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.gridsampleproject.application.service.GridSampleServiceImpl;
 import com.gridsampleproject.application.util.GridUtil;
+import com.gridsampleproject.application.util.MailUtil;
 
 @RestController
 public class AjaxController {
@@ -21,6 +22,8 @@ public class AjaxController {
 	GridSampleServiceImpl gridsampleservice;
 	@Autowired
 	GridUtil gridutil;
+	@Autowired
+	MailUtil mailUtil;
 	
 	//일반적인 ajax는 @RequestBody 형식으로 받는다.//
 	@RequestMapping(value = "/datainfo.do", method = RequestMethod.POST, produces = {"application/json"})
@@ -39,5 +42,17 @@ public class AjaxController {
 	public @ResponseBody Map<String, Object> datainit(@RequestParam Map<String, Object> paramInfo) {
 		//기본적으로 jqGrid는 url 즉 ajax통신을 할 시 "key:page"값을 넘겨준다.(@RequestParam로 설정)//
 		return gridutil.gridDataSet(gridsampleservice.getSampleDataList(paramInfo), "1");
+	}
+	
+	@RequestMapping(value = "/sendmail.do", method = RequestMethod.POST, produces = {"application/json"})
+	public @ResponseBody Map<String, Object> sendmail(@RequestBody Map<String, Object> paramInfo) {
+		//메일 서비스 호출//
+		mailUtil.sendSimpleMessage(paramInfo.get("sendto").toString(), paramInfo.get("subject").toString(), paramInfo.get("content").toString());
+		
+		Map<String, Object> retVal = new HashMap<String, Object>(); //諛섑솚�븷 ���엯�쓽 �겢�옒�뒪瑜� �꽑�뼵//
+
+		retVal.put("result", "success!!");
+		
+		return retVal;
 	}
 }
