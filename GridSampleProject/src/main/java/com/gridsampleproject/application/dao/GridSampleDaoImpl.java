@@ -33,6 +33,7 @@ public class GridSampleDaoImpl implements GridSampleDao{
 			searchdata.put("password", "3333");
 			searchdata.put("name", "가나다");
 			searchdata.put("empnum", "21099");
+			searchdata.put("email", "scw05313315@gmail.com");
 
 			datalist.add(searchdata);
 			
@@ -51,6 +52,7 @@ public class GridSampleDaoImpl implements GridSampleDao{
 			data1.put("password", "1234");
 			data1.put("name", "서창욱");
 			data1.put("empnum", "21084");
+			data1.put("email", "scw05313315@gmail.com");
 
 			datalist.add(data1);
 
@@ -60,6 +62,7 @@ public class GridSampleDaoImpl implements GridSampleDao{
 			data2.put("password", "5678");
 			data2.put("name", "홍길동");
 			data2.put("empnum", "21085");
+			data2.put("email", "scw05313315@gmail.com");
 
 			datalist.add(data2);
 		//}
@@ -71,6 +74,7 @@ public class GridSampleDaoImpl implements GridSampleDao{
 			data3.put("password", "1425");
 			data3.put("name", "임꺽정");
 			data3.put("empnum", "21086");
+			data3.put("email", "scw05313315@gmail.com");
 
 			datalist.add(data3);
 
@@ -80,6 +84,7 @@ public class GridSampleDaoImpl implements GridSampleDao{
 			data4.put("password", "1111");
 			data4.put("name", "김철수");
 			data4.put("empnum", "21087");
+			data4.put("email", "scw05313315@gmail.com");
 
 			datalist.add(data4);
 		//}
@@ -91,6 +96,7 @@ public class GridSampleDaoImpl implements GridSampleDao{
 			data5.put("password", "2222");
 			data5.put("name", "김영희");
 			data5.put("empnum", "21088");
+			data5.put("email", "scw05313315@gmail.com");
 
 			datalist.add(data5);
 			
@@ -100,6 +106,7 @@ public class GridSampleDaoImpl implements GridSampleDao{
 			data6.put("password", "3333");
 			data6.put("name", "가나다");
 			data6.put("empnum", "21099");
+			data6.put("email", "scw05313315@gmail.com");
 
 			datalist.add(data6);
 		//}
@@ -111,6 +118,7 @@ public class GridSampleDaoImpl implements GridSampleDao{
 			data7.put("password", "4444");
 			data7.put("name", "마바사");
 			data7.put("empnum", "22000");
+			data7.put("email", "scw05313315@gmail.com");
 
 			datalist.add(data7);
 		//}

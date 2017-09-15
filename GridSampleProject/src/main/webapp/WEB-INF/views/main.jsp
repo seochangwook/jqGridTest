@@ -51,14 +51,6 @@
 		<input type="button" value="search(table reload)" id="searchbutton">&nbsp
 		<input type="button" value="refresh" id="refreshbutton">
 	</div>
-	<br>
-	<div>
-		<label>* Mail info</label><br>
-		<input type="text" placeholder="input send mailaddress" id="sendtoaddress">&nbsp
-		<input type="text" placeholder="input email subject" id="emailsubject">&nbsp
-		<input type="text" placeholder="input email content" id="emailcontent">
-		<input type="button" value="메일전송" id="sendmailbtn">
-	</div>
 </body>
 <script type="text/javascript">
 $(function(){
@@ -98,47 +90,6 @@ $(function(){
 		
 		datainit(); //재로드//
 	});
-	$('#sendmailbtn').click(function(){
-		//ajax//
-		var sendto = $('#sendtoaddress').val();
-		var subject = $('#emailsubject').val();
-		var content = $('#emailcontent').val();
-		
-		var trans_objeect = 
-		{
-	    	'sendto':sendto,
-	    	'subject':subject,
-	    	'content':content
-	    }
-		var trans_json = JSON.stringify(trans_objeect); //json으로 반환//
-		
-		$.ajax({
-			url: '<c:url value="/sendmail.do"/>',
-			type: 'POST',
-			dataType: 'json',
-			data: trans_json,
-			contentType: 'application/json',
-			mimeType: 'application/json',
-			success: function(retVal){
-				var infodialog = new $.Zebra_Dialog('<strong>Message:</strong><br><br><p>ajax call '+retVal.result+'</p>',{
-					title: 'jqGrid Test',
-					type: 'confirmation',
-					print: false,
-					width: 760,
-					position: ['right - 20', 'top + 20'],
-					buttons: ['닫기'],
-					onClose: function(caption){
-						if(caption == '닫기'){
-							//alert('yes click');
-						}
-					}
-				});
-			},
-			error: function(retVal, status, er){
-				alert("error: "+retVal+" status: "+status+" er:"+er);
-			}
-		});
-	});
 });
 </script>
 <script type="text/javascript">
@@ -163,7 +114,9 @@ function datainit(){
          	{label:'Password',name:'password',index:'password', width:50, hidden:true},
             {label:'Name',name:'name',index:'name', width:50, formatter:detailinfo},
             {label:'EmpNum',name:'empnum',index:'empnum', width:50, align:"right"},
-            {label:'정보보기', name:'info', index:'info', width:50, formatter:infoclick}
+            {label:'email',name:'email',index:'email', width:50, align:"right"},
+            {label:'정보보기', name:'info', index:'info', width:50, formatter:infoclick},
+            {label:'이메일 전송', name:'infomail', index:'infomail', width:50, formatter:sendmail}
         ],
         multiselect:true,
 		caption:"<label>* 총 <strong id='totalCnt'>0</strong>건의 검색결과가 있습니다.</label>",
@@ -200,6 +153,11 @@ function infoclick(cellvalue, options, rowdata, action){
 	return "<input type=\"button\" value=\"click\" onclick=\"info('"+rowdata.name+"','"+rowdata.empnum+"','"+rowdata.password+"')\"/>";
 }
 //////////////////////////
+function sendmail(cellvalue, options, rowdata, action){
+	//테이블 내 버튼을 출력//
+	return "<input type=\"button\" value=\"click\" onclick=\"mailsend('"+rowdata.email+"','"+rowdata.name+"')\"/>";
+}
+//////////////////////////
 function info(name, empnum, password){
 	console.log('------------------------');
 	console.log('cell info print');
@@ -230,6 +188,52 @@ function info(name, empnum, password){
 		mimeType: 'application/json',
 		success: function(retVal){
 			var infodialog = new $.Zebra_Dialog('<strong>Message:</strong><br><br><p>ajax call success</p>',{
+				title: 'jqGrid Test',
+				type: 'confirmation',
+				print: false,
+				width: 760,
+				position: ['right - 20', 'top + 20'],
+				buttons: ['닫기'],
+				onClose: function(caption){
+					if(caption == '닫기'){
+						//alert('yes click');
+					}
+				}
+			});
+		},
+		error: function(retVal, status, er){
+			alert("error: "+retVal+" status: "+status+" er:"+er);
+		}
+	});
+}
+//////////////////////////
+function mailsend(email, name){
+	console.log('------------------------');
+	console.log('cell info print');
+	console.log('email: ' + email);
+	console.log('name: ' + name);
+	console.log('------------------------');
+	
+	//ajax//
+	var v_email = email;
+	var v_name = name;
+	
+	var trans_objeect = 
+	{
+    	'email':v_email,
+    	'name':v_name,
+    }
+	var trans_json = JSON.stringify(trans_objeect); //json으로 반환//
+	
+	$.ajax({
+		url: '<c:url value="/sendmail.do"/>',
+		type: 'POST',
+		dataType: 'json',
+		data: trans_json,
+		contentType: 'application/json',
+		mimeType: 'application/json',
+		success: function(retVal){
+			var infodialog = new $.Zebra_Dialog('<strong>Message:</strong><br><br><p>ajax call '+retVal.result+'</p>',{
 				title: 'jqGrid Test',
 				type: 'confirmation',
 				print: false,

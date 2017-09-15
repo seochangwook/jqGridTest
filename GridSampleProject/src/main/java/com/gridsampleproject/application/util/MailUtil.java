@@ -14,15 +14,15 @@ public class MailUtil {
 	@Value("${spring.mail.username}")
 	private String senderMail;
 	
-	public void sendSimpleMessage(String to, String subject, String text) {
-		System.out.println("to: " + to + "/ subject: " + subject + "/ text: " + text);
+	public void sendSimpleMessage(String to, String name) {
+		System.out.println("to: " + to + "/ name: " + name);
 		
 		SimpleMailMessage message = new SimpleMailMessage();
 		
         message.setTo(to);
         message.setFrom(senderMail);
-        message.setSubject(subject);
-        message.setText(text);
+        message.setSubject("[" + name +"] Hello - Dreaming developer");
+        message.setText("test email");
         
         emailSender.send(message);
 	}

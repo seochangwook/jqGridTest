@@ -47,7 +47,7 @@ public class AjaxController {
 	@RequestMapping(value = "/sendmail.do", method = RequestMethod.POST, produces = {"application/json"})
 	public @ResponseBody Map<String, Object> sendmail(@RequestBody Map<String, Object> paramInfo) {
 		//메일 서비스 호출//
-		mailUtil.sendSimpleMessage(paramInfo.get("sendto").toString(), paramInfo.get("subject").toString(), paramInfo.get("content").toString());
+		mailUtil.sendSimpleMessage(paramInfo.get("email").toString(), paramInfo.get("name").toString());
 		
 		Map<String, Object> retVal = new HashMap<String, Object>(); //諛섑솚�븷 ���엯�쓽 �겢�옒�뒪瑜� �꽑�뼵//
 
