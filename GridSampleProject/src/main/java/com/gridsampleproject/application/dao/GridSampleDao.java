@@ -5,4 +5,5 @@ import java.util.Map;
 
 public interface GridSampleDao {
 	public List<Map<String, Object>> getSampleDataList(Map<String, Object> paramInfo);
+	
 }

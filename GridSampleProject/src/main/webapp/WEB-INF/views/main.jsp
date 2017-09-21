@@ -51,6 +51,14 @@
 		<input type="button" value="search(table reload)" id="searchbutton">&nbsp
 		<input type="button" value="refresh" id="refreshbutton">
 	</div>
+	<br>
+	<div>
+		<label>* Spring JPA, Hibernate Test</label><br>
+		<input type='button' value='load user' id='btntest5'>
+		<br>
+		<input type="text" placeholder="input search id" id="searchid">&nbsp
+		<input type="button" value="search" id="searchidbtn">&nbsp
+	</div>
 </body>
 <script type="text/javascript">
 $(function(){
@@ -89,6 +97,76 @@ $(function(){
 		$("#grid").jqGrid('GridUnload'); //그리드를 전체 지운다.//
 		
 		datainit(); //재로드//
+	});
+	$('#btntest5').click(function(){
+		var trans_objeect = 
+		{
+	    	'':''
+	    }
+		var trans_json = JSON.stringify(trans_objeect); //json으로 반환//
+		
+		$.ajax({
+			url: '<c:url value="/jpatest.do"/>',
+			type: 'POST',
+			dataType: 'json',
+			data:trans_json,
+			contentType: 'application/json',
+			mimeType: 'application/json',
+			success: function(retVal){
+				var infodialog = new $.Zebra_Dialog('<strong>Message:</strong><br><br><p>ajax call success</p>',{
+					title: 'jqGrid Test',
+					type: 'confirmation',
+					print: false,
+					width: 760,
+					position: ['right - 20', 'top + 20'],
+					buttons: ['닫기'],
+					onClose: function(caption){
+						if(caption == '닫기'){
+							//alert('yes click');
+						}
+					}
+				});
+			},
+			error: function(retVal, status, er){
+				alert("error: "+retVal+" status: "+status+" er:"+er);
+			}
+		});
+	});
+	$('#searchidbtn').click(function(){
+		var search_id = $('#searchid').val();
+		
+		var trans_objeect = 
+		{
+	    	'userid':search_id
+	    }
+		var trans_json = JSON.stringify(trans_objeect); //json으로 반환//
+		
+		$.ajax({
+			url: '<c:url value="/jpatest.do"/>',
+			type: 'POST',
+			dataType: 'json',
+			data: trans_json,
+			contentType: 'application/json',
+			mimeType: 'application/json',
+			success: function(retVal){
+				var infodialog = new $.Zebra_Dialog('<strong>Message:</strong><br><br><p>ajax call success</p>',{
+					title: 'jqGrid Test',
+					type: 'confirmation',
+					print: false,
+					width: 760,
+					position: ['right - 20', 'top + 20'],
+					buttons: ['닫기'],
+					onClose: function(caption){
+						if(caption == '닫기'){
+							//alert('yes click');
+						}
+					}
+				});
+			},
+			error: function(retVal, status, er){
+				alert("error: "+retVal+" status: "+status+" er:"+er);
+			}
+		});
 	});
 });
 </script>
