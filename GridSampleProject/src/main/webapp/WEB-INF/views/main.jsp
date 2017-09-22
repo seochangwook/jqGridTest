@@ -261,7 +261,7 @@ $(function(){
 			mimeType: 'application/json',
 			success: function(retVal){
 				if(retVal.result == 'success'){
-					var infodialog = new $.Zebra_Dialog('<strong>Message:</strong><br><br><p>검색성공</p>',{
+					var infodialog = new $.Zebra_Dialog('<strong>Message:</strong><br><br><p>제거성공</p>',{
 						title: 'jqGrid Test',
 						type: 'confirmation',
 						print: false,
