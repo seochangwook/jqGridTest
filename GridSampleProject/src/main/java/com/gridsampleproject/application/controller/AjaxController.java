@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,7 +38,7 @@ public class AjaxController {
 		
 		Map<String, Object> retVal = new HashMap<String, Object>(); //諛섑솚�븷 ���엯�쓽 �겢�옒�뒪瑜� �꽑�뼵//
 		
-		retVal.put("result", "success!!");
+		retVal.put("result", "success");
 		
 		return retVal;
 	}
@@ -56,7 +57,7 @@ public class AjaxController {
 		
 		Map<String, Object> retVal = new HashMap<String, Object>(); //諛섑솚�븷 ���엯�쓽 �겢�옒�뒪瑜� �꽑�뼵//
 
-		retVal.put("result", "success!!");
+		retVal.put("result", "success");
 		
 		return retVal;
 	}
@@ -66,33 +67,85 @@ public class AjaxController {
 		//DB서비스 호출//
 		List<UserInfo> userlist = userInfoDao.findAll();
 
-
 		for(int i=0; i<userlist.size(); i++){
 			System.out.println("email: " + userlist.get(i).getUser_email());
 		}
 			
 		Map<String, Object> retVal = new HashMap<String, Object>(); //諛섑솚�븷 ���엯�쓽 �겢�옒�뒪瑜� �꽑�뼵//
 
-		retVal.put("result", "success!!");
+		retVal.put("result", "success");
 		
 		return retVal;
 	}
 	
 	@RequestMapping(value = "/jpatestsearch.do", method = RequestMethod.POST, produces = {"application/json"})
-	public @ResponseBody Map<String, Object> searchUser(@RequestBody Map<String, Object> paramInfo) {
+	public @ResponseBody Map<String, Object> searchUserEmail(@RequestBody Map<String, Object> paramInfo) {
 		Map<String, Object> retVal = new HashMap<String, Object>(); //諛섑솚�븷 ���엯�쓽 �겢�옒�뒪瑜� �꽑�뼵//
 		
-		System.out.println("search id: " + paramInfo.get("userid").toString());
+		userInfoDao.findAll(); //CRUD작업을 하기 전 JPA 데이터 초기화//
+		
 		//DB서비스 호출//
 		try{
-			List<UserInfo> usersearch = userInfoDao.findByUserId(paramInfo.get("userid").toString());
-			System.out.println("size: " + usersearch.size() + "/ id: " + usersearch.get(0).getUser_email());
+			List<UserInfo> usersearch = userInfoDao.findByUserEmail(paramInfo.get("userid").toString());
+			
+			if(usersearch.size() == 0){
+				retVal.put("result", "fail");
+			} else{
+				System.out.println("email: " + usersearch.get(0).getUser_email());
+				
+				retVal.put("result", "success");
+			}
 		} catch(Exception e){
 			e.printStackTrace();
 		}
 		
-
-		retVal.put("result", "success!!");
+		return retVal;
+	}
+	
+	@RequestMapping(value = "/jpatestsearchemail.do", method = RequestMethod.POST, produces = {"application/json"})
+	public @ResponseBody Map<String, Object> searchUserPhonenumber(@RequestBody Map<String, Object> paramInfo) {
+		Map<String, Object> retVal = new HashMap<String, Object>(); //諛섑솚�븷 ���엯�쓽 �겢�옒�뒪瑜� �꽑�뼵//
+		
+		userInfoDao.findAll(); //CRUD작업을 하기 전 JPA 데이터 초기화//
+		
+		//DB서비스 호출//
+		try{
+			List<UserInfo> usersearch = userInfoDao.findByUserPhoneNumber(paramInfo.get("useremail").toString(), paramInfo.get("userid").toString());
+			
+			if(usersearch.size() == 0){
+				retVal.put("result", "fail");
+			} else{
+				System.out.println("phonenumber: " + usersearch.get(0).getUser_phonenumber());
+				
+				retVal.put("result", "success");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return retVal;
+	}
+	
+	@RequestMapping(value = "/jpatestdeleteuser.do", method = RequestMethod.POST, produces = {"application/json"})
+	public @ResponseBody Map<String, Object> deleteUser(@RequestBody Map<String, Object> paramInfo) {
+		Map<String, Object> retVal = new HashMap<String, Object>(); //諛섑솚�븷 ���엯�쓽 �겢�옒�뒪瑜� �꽑�뼵//
+		
+		userInfoDao.findAll(); //CRUD작업을 하기 전 JPA 데이터 초기화//
+		
+		//DB서비스 호출//
+		try{
+			int result = userInfoDao.deleteUserById(paramInfo.get("userid").toString());
+			
+			if(result == 0){
+				retVal.put("result", "fail");
+			} else{
+				System.out.println("delete success " + paramInfo.get("userid").toString());
+				
+				retVal.put("result", "success");
+			}
+		} catch(Exception e){
+			e.printStackTrace();
+		}
 		
 		return retVal;
 	}
